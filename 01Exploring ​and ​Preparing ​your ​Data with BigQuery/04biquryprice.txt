@@ -1,0 +1,99 @@
+# BigQuery jobs
+
+As you've learned earlier, BigQuery is a pay for what you use pricing model. You don't pay for any setup or infrastructure. All that is managed fully behind the scenes. Now let's talk a bit more about the pricing specifics and how you can optimize your queries for costs. Okay, to understand pricing for BigQuery, we have to understand what a unit of work for BigQuery is. So BigQuery does work on the order of jobs. So a job is a task. So it can be a querying task, much like you're running a SQL query, but also it could be a loading data, exporting data. All of these things take time and resources for BigQuery to execute. Now you can do multiple jobs at once. So for example, if you had for your Google Cloud platform account, you had 20 different users, everyone's executing jobs inside of BigQuery, and maybe you have a team that's loading data in and you have ten analysts that are querying data. You could have multiple, multiple jobs that are running concurrently at the same time, asynchronously. So the jobs perform tasks, and if you needed to check back on those jobs, the history of them is stored for six months. So you can potentially repeat an import job or take a look at some of the other things that you've done. So let's talk how that relates to pricing.
+Play video starting at :1:15 and follow transcript1:15
+So four jobs, you have querying data, loading data, extracting data, as an example, to Google Cloud Storage, or copying tables. For example, if you wanted to say hey, let's mirror our production data in our development environment, we're just going to copy that table on over. So for pricing purposes, great news for you guys is that three out of the four jobs are free, so loading or adjusting data into BigQuery is free, extracting it to the Google Cloud Storage is free, and copying tables are free. So the two main components of cost for BigQuery, again, consumption-based, is your charge for the amount of data that you process. Or the bytes, like the amount of gigabytes or megabytes or terabytes that you process. And for the storage cost of storing your data permanently on disk. Now, largely you've seen we're querying these public datasets. Obviously you're not charged for public datasets. The BigQuery team kind of manages and hosts those. But in the next course, where you're actually creating your very own dataset, you'll actually be having to use these permanent tables that are stored within BigQuery. And we'll get into how much those cost in just a few slides.
+
+# Sizing and cost management
+Organizations always want to know how much things will cost, so let's take a look at how to determine and control the cost of both storage and analytics.
+Play video starting at ::10 and follow transcript0:10
+Once your data is loaded into BigQuery, you are charged for storing it.
+Play video starting at ::16 and follow transcript0:16
+Storage pricing is based on the amount of data stored in tables when it's uncompressed. The size of the data is calculated based on the data types of the individual columns. Active storage pricing is prorated per megabyte, per second.
+Play video starting at ::33 and follow transcript0:33
+If a partition or non-partitioned table isn't edited for 90 consecutive days it's considered long-term storage.
+Play video starting at ::43 and follow transcript0:43
+The price of storage for that table automatically drops by approximately 50%. There is no degradation of performance, durability, availability, or any other functionality.
+Play video starting at ::56 and follow transcript0:56
+If the table is edited, the price reverts back to the regular storage pricing, and the 90-day timer starts counting from zero. This is another reason for considering using partitioned tables. Even if it doesn't improve query performance, you can save money on storage.
+Play video starting at :1:16 and follow transcript1:16
+Any actions on a table that do not change the data or the structure of the table don't affect the timer.
+Play video starting at :1:25 and follow transcript1:25
+Analytics engine cost is separate from storage costs. The default pricing is "on-demand", but organizations who prefer a consistent bill amount may opt for flat-rate pricing. Capacity is sold in increments of 500 slots with a current minimum of 500 slots. Slots
+Play video starting at :1:44 and follow transcript1:44
+are available in the following commitment plans: Flex slots, where you commit to an initial 60 seconds. Monthly, where you commit to an initial 30 days, and annual, where you commit to 365 days. Google offers a 25% discount for organizations choosing a term length of at least one year. Use the Google Cloud Pricing Calculator to find the exact price for the number of slots you want in a region. Let's compare the on demand and flat rate options in a little more detail. Under on-demand pricing, BigQuery charges for queries by using one metric: the number of bytes processed, also referred to as bytes read.
+Play video starting at :2:33 and follow transcript2:33
+You're charged for the number of bytes processed whether the data is stored in BigQuery or in an external data source such as Cloud Storage, Google Drive, or Bigtable.
+Play video starting at :2:46 and follow transcript2:46
+To help control costs you can set user-level and project-level custom quotas, and you can set the maximum bytes billed by query. If the query will read bytes beyond the limit, the query fails with a "Query exceeded limit for bytes billed" error without incurring any charges.
+Play video starting at :3:8 and follow transcript3:08
+There are a number of things to note regarding query charges.
+Play video starting at :3:14 and follow transcript3:14
+BigQuery uses a columnar data structure. You are charged according to the total data processed in the columns you select, and the total data per column is calculated based on the types of data in the column.
+Play video starting at :3:30 and follow transcript3:30
+You aren't charged for queries that return an error, or for queries that retrieve results from the cache. Using results from cache is on by default.
+Play video starting at :3:41 and follow transcript3:41
+Queries are rounded to the nearest megabyte, with a minimum 10 megabyte data processed per table referenced by the query, and with a minimum 10 megabyte data processed per query. Canceling a running query job may incur charges up to the full cost for the query were it allowed to run to completion. When you run a query, you are charged according to the data processed in the columns you select, even if you set an explicit LIMIT on the results. That's because LIMIT is processed AFTER the query completes.
+Play video starting at :4:21 and follow transcript4:21
+Partitioning and clustering tables can help reduce the amount of data processed by queries. As a best practice, use partitioning and clustering whenever possible.
+Play video starting at :4:33 and follow transcript4:33
+On-demand pricing is referred to as analysis pricing on the Google Cloud SKUs page. This is useful if you're looking at billing reports. Now let's have a look at flat-rate pricing.
+Play video starting at :4:48 and follow transcript4:48
+Flat-rate pricing limits, the number of slots used at any time. Slot usage includes resources required for both DML and DDL. If your queries exceed your flat-rate capacity, your queries are queued until your flat-rate resources become available.
+Play video starting at :5:8 and follow transcript5:08
+As with fixed-rate pricing, storage costs are calculated independently.
+Play video starting at :5:14 and follow transcript5:14
+The flat-rate cost depends on both the number of slots and the region in which the slots are purchased.
+Play video starting at :5:22 and follow transcript5:22
+By default, flat-rate pricing is calculated based on a monthly commitment, but you can get a discounted price for an annual commitment.
+Play video starting at :5:33 and follow transcript5:33
+BigQuery limits the rate of incoming requests on a per-project basis. You can contact Google Cloud support to increase quotas, however additional charges may occur.
+Play video starting at :5:48 and follow transcript5:48
+There are a number of considerations for flat-rate pricing.
+Play video starting at :5:52 and follow transcript5:52
+Flex slots are a special commitment type. The commitment duration is only 60 seconds and you can cancel Flex slots any time thereafter. You are also charged only for the seconds your commitment was deployed. Flex slots are subject to capacity availability. When you attempt to purchase Flex slots, the success of the purchase isn't guaranteed. However, once your commitment purchase is successful, your capacity is guaranteed until you cancel it.
+Play video starting at :6:28 and follow transcript6:28
+Monthly commitments cannot be canceled for 30 days after your commitment is active. After the first 30 calendar days, you can cancel or downgrade any time. If you cancel or downgrade, charges are prorated per second at the monthly rate. For example, you cannot cancel on day 29. If you cancel during the first second of day 31, you are charged for 30 days and 1 second, and if you cancel at the mid-point of the third month, you're charged 50% of your monthly rate for that month.
+Play video starting at :7:10 and follow transcript7:10
+Prior to the anniversary of your commitment date, you can choose to renew for another year, or convert it to a monthly or flex commitment. If you move to the monthly rate, you can cancel at any time, and you're charged per-second at the monthly rate. For example: If you renew for another year after your annual commitment date, you enter into a new annual commitment, and you continue to be charged the yearly commitment rate. Also, if you don't renew for another year after your annual commitment date, you can cancel at any time, and your charges are prorated per second at the monthly rate.
+Play video starting at :7:54 and follow transcript7:54
+If you determine you need more BigQuery slots, you can purchase additional increments of 500. However, doing so will create a new commitment.
+Play video starting at :8:7 and follow transcript8:07
+When you purchase at a flat-rate plan, you specify the allocation of slots by location. To use slots in multiple locations, you must purchase slots in each location.
+Play video starting at :8:19 and follow transcript8:19
+A project can use either flat-rate or on-demand pricing. If you have multiple projects in a given location, you can choose which projects use flat-rate pricing and which project to use on-demand pricing.
+Play video starting at :8:35 and follow transcript8:35
+Lastly, to discontinue a flat-rate pricing plan, you must cancel or downgrade your commitment, but only AFTER the initial commitment period - 30 days or 1 year.
+Play video starting at :8:51 and follow transcript8:51
+On demand queries are charged based on the number of bytes read. If your query processes a small amount of data, you might need to convert the bytes that are processed from kilobytes to megabytes. A megabyte is the smallest measure that is used by the Google Cloud Pricing Calculator.
+Play video starting at :9:11 and follow transcript9:11
+When you enter a query in the Cloud Console, the query validator verifies the query syntax and provides an estimate of the number of bytes to be read. You can use this estimate to calculate query cost in the Pricing Calculator.
+Play video starting at :9:27 and follow transcript9:27
+When you run a query in the command line interface, you can use the --dry_run flag to estimate the number of bytes read. You can use this estimate to calculate query cost in the Pricing Calculator.
+Play video starting at :9:41 and follow transcript9:41
+When you run the command with dry_ run set, the query is not executed, and the response contains the estimated bytes. You can also perform dry-run estimates by the API or using language libraries for Go, Python, and so on.
+Play video starting at :10: and follow transcript10:00
+The Google Cloud Pricing Calculator can be used to estimate the on-demand cost of queries or storage, or both.
+Play video starting at :10:8 and follow transcript10:08
+To estimate on-demand query costs, enter the number of bytes that are processed by the query as megabyte, gigabyte, terabyte or petabyte. If your query process is less than 1 terabyte, the estimate is $0 because BigQuery provides one terabyte of on demand processing free per month.
+Play video starting at :10:30 and follow transcript10:30
+To estimate on demand storage costs, enter the number of sites that are stored as megabyte, gigabyte, terabyte or petabyte. BigQuery provides 10 gigabytes of storage free per month.
+Play video starting at :10:44 and follow transcript10:44
+If flat-rate pricing is applied to a billing account, you can click the Flat-Rate tab, choose the location and number of slots, then add storage cost to the estimate. A BigQuery Slot is a proprietary measure of capacity. You can choose a number of slots between 500 and 200,000.
+Play video starting at :11:6 and follow transcript11:06
+As discussed, a slot is a combination of CPU, memory, and networking resources. It also includes a number of supporting technologies and sub-services. Refer to the link in the Course Resources to access the Google Cloud Pricing Calculator.
+
+# Optimize ​queries ​for ​cost
+Okay, let's talk a little bit about what you can do to optimize your queries for cost.
+Play video starting at ::5 and follow transcript0:05
+So as we covered, filter early and filter often. Use those cache results when possible. So if you're constantly executing the same query or if you can, try to do that. And one of the things that you can do there is make use of permanent tables instead of rerunning your SQL query every time through view. And what a view is, is a saved SQL query that sits on top of a table. But again, views can take advantage of that cache as well. So views are saved queries, we're going to talk a little bit more about them in the next course on creating new datasets. And the difference between permanent tables, temporary tables, and those views, which are those saved queries. So we haven't introduced them yet, but I'm already warning you about them. Which are UDFs or User Defined Functions. So say, you can't find a SQL function that does what you really need it to do, which is like add three, divide by six, look up this value, and then use some kind of string matching JavaScript. You could write that all in a custom function and operate on every single row in your data set. But that has performed implications and it uses potentially more resources as well, which means higher cost for you.
+Play video starting at :1:20 and follow transcript1:20
+So there are some situations where UDFs can't be avoided if you want to do some really cool things, but just keep that in mind is the pricing and performance hit.
+Play video starting at :1:29 and follow transcript1:29
+Let's wrap up our discussion in BigQuery pricing by reviewing a few of the key points we covered. A unit of work in BigQuery is called a job. And the only job that actually costs money is the amount of data consumed or bytes processed by your SQL queries, which you can actually see before you run your queries by clicking on that validator.
+Play video starting at :1:47 and follow transcript1:47
+A big benefit here is that cache data itself is free to query. And you have one terabyte of free processing per month.
+Play video starting at :1:55 and follow transcript1:55
+Now to save in the amount of data you consume, reduce the columns and filter the rows of your data set, so you only use the ones you actually need to query.
+Play video starting at :2:4 and follow transcript2:04
+We'll cover more optimization techniques when we discuss BigQuery and performance as part of the Achieving Advanced Insights course.

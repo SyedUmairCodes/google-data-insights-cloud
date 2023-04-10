@@ -1,0 +1,173 @@
+# ​5 ​principles ​of ​dataset ​integrity
+Now one of the most critical parts of data analysis happens way before you build your first visualization or your machine learning models. And while not necessarily the most glamorous ,data preparation and transformation can't be ignored. In this module, we're going to cover the elements of what makes a dataset good and then look at two different ways to process, clean and prepare your data. One, as you might expect, is through SQL and BigQuery. And the other is through a graphical user interface in Cloud Dataprep. So the majority of data quality lectures will begin with a statement like this: Garbage in, garbage out. Now what that means in our specific examples are: if you want to build amazing machine learning models, you can't feed them with garbage. You've got to feed them with really good data to begin with.
+Play video starting at ::46 and follow transcript0:46
+And if again, if that is your end goal, to build the awesome ML models after you master this course, and the data engineering course after this, then this is your real first step there. You have to get extremely good, clean data in order for something like an ML model, or even just insights from SQL, to begin to even process things at that caliber, because ML specifically relies on consistent patterns of data. And if you start feeding it garbage data, it's going to, you know, potentially overfit your models and do a whole bunch of other bad things that you don't want to do. So in order to prevent that, let's talk about some of the things that we can do.
+Play video starting at :1:25 and follow transcript1:25
+So high quality data sets follow these strict rules, and there are five of them. They're valid, they conform to those business rules. They're accurate, again some true objective value. They're complete, meaning that you can see the whole picture and you're not just getting a subset of the data, not being fooled. They're consistent, meaning that you can drive actual insights that you can rely off of. And they're uniform, and there's a fun example that we'll go through for each of these.
+Play video starting at :1:56 and follow transcript1:56
+First up, validity. Data follows constraints on uniqueness. So what do three of these images have in common?
+Play video starting at :2:5 and follow transcript2:05
+They're all unique identifiers, right? So that telephone represents a unique number where I can reach you, you can reach me. If somebody else had my same number, I'd be worried, I don't even know how that would work. You would call me and the two people would answer it? It just wouldn't work, right. And for the same principle that that sounds ludicrous, having multiple physical addresses be the same, or people sharing the same license plate
+Play video starting at :2:31 and follow transcript2:31
+presents a massive problem. And in the same way for your data, when we talk later on in the courses about joining data together, or like we did earlier about having the EIN, or the charitable organization that had multiple filings within the same year. That'll present complications, like we talked about, like when you're summing things and making assumptions about all the different individual records, if they're not unique, you could run into some serious complications, especially when we talk about joins later and unintentionally cross joining your data between the cover.
+Play video starting at :3:9 and follow transcript3:09
+Second up, valid data corresponds to constraints of ranges. So here we go. Which values are out of range? So you've got some dice and you've got the rolls here, the occurrences. If you're staring at number seven, that could potentially be right. So say you're rolling one die, and is it possible to get a seven? No, it's not possible to get a seven, that's out of bounds. Alternatively, say since I did mention dice, you're rolling two dice. What would be the out of range value here?
+Play video starting at :3:48 and follow transcript3:48
+That would be roll number five with a value of one, if you roll two dice, can't have one as one of those values. So the metapoint here is that if you're able to know ahead of time if your data smells funny, or if after exploring your data in the exploratory analysis that you perform, you find that hey, this should always be X or this should always be Y, and it falls in one of these ranges, you can set those up much like they do in software development as a test, and you can do that within SQL, you could do that within one of the other tools I'm going to show you called Cloud Dataprep. Any of these values that are making your dataset weird, or cause you pause, you can have automatic notifiers that basically say, hey, you know, this, this dirty data right here, I'm going to go ahead and clean it up and make it transform. So in this particular case, you could say, well, if it's one, I want to exclude that complete value. I don't even want to include that roll at all, or maybe I'll completely invalidate the results because there's something obviously wrong with the dice here. So there's many things that you can do, but setting up the validation in an automated, repeatable way is one of the end results here. Moving on, data has to match a source of truth, right? That's what makes it accurate. Say if you're in the United States and you're presented with this list. Washington, Oregon, California, hot dogs, Florida and Maine, and you're like, wait a minute, I don't remember a US state called Hot Dog.
+Play video starting at :5:20 and follow transcript5:20
+It doesn't match what we know as a source of truth. So it's a string it matches in terms of data value, but against a known lookup source, it doesn't necessarily match. And again, there's debates over, as you're going to see in your Cloud Dataprep lab, how many U.S. states are there? Are there 50, as is commonly known, or are you also including territories, U.S. territories or, you know, post offices that exist potentially in other other countries.
+Play video starting at :5:50 and follow transcript5:50
+You'll see that come up again soon. What about this? So we're going to talk about completeness,
+Play video starting at :5:59 and follow transcript5:59
+thanks in large part to
+Play video starting at :6:3 and follow transcript6:03
+the ubiquity of probably the image on the right, you'll be able to discern that is actually Big Ben. But here you're comparing a subset, or a sample of your data in trying to make insights or assumptions about the entirety of your data. So from here, going back to the last slide. You could say, oh, my dataset is a bunch of just clocks and lamps, and they look funny,
+Play video starting at :6:31 and follow transcript6:31
+and they're low resolution. But when in reality,
+Play video starting at :6:36 and follow transcript6:36
+the greater picture of your dataset here, because pixels are just numbers right, is much, much more complex and it's actually oh, no, it's this location, this is this is Big Ben. This is in London. So it's funny how we can immediately notice something that's wrong with a picture. A picture is worth a thousand words, but within a dataset, if someone hands you a CSV file or a bunch of JSON, then we generally just, unless we're practicing to, we don't ask the question of is this all the data? Is this a subset, am I missing fields, or rows, or columns? Is this complete or do I need to do additional work to make sure that I'm collecting everything that I need to collect? Especially true when you're mashing up data from a variety of different silos, right? So don't be afraid to ask those questions. Is my data complete? Do I have everything? Are all the rows accounted for?
+Play video starting at :7:32 and follow transcript7:32
+Well, last but not least, we have consistency. And this is the dilemma here, where you have potentially two owners for a house. You have two different tables. The house address, 123 ABC Street, and the owner ID of 12. And you have an owner's table, where it has Owner ID of 15, but their address is 123 ABC Street. In Database 101, we call this a referential integrity issue. So who actually owns that house, right? Whose name is on the deed. And having consistent data, and we call this one fact in one place. It gives you that harmony across many different systems, especially when it comes to joining the state later. You don't have any issues. Oh, I lied. It wasn't the last one. Uniformity was the last one, because this is the example that I really like to share. So
+Play video starting at :8:22 and follow transcript8:22
+there was a Mars climate orbiter in just before the
+Play video starting at :8:27 and follow transcript8:27
+year 2000, right? In 1999, NASA unfortunately lost $125 million climate orbiter as it burned up into the surface of Mars because of an issue with one team using the English system of feet, and yards, and another team that was working on a different part of this system using the metric system.
+Play video starting at :8:55 and follow transcript8:55
+And while it seemed like a potential innocuous problem to begin with, like everyone's just, you know, English versus metric, who's right? At the end of the day when it amounts to building such a complex system like this, you need to make sure that everyone is using a uniform system of measurement.
+
+# Dataset ​shape ​and ​skew
+Moving on to dataset shape and skew. So two quick slides here on dataset shape and Skew. So your dataset, it can come in a variety of different forms, right, When it's given to you or when you're accessing it, you could have a ton of columns, but not that many rows. We call that a wide but short dataset, which is probably honestly the worst case scenario. It means you have a ton of things that you want to collect data for, but you just don't have that many instances or occurrences or records.
+Play video starting at ::31 and follow transcript0:31
+Maybe not as bad, but still pretty terrible is in the lower left now. We have a dataset that's taller than wide, meaning you have a lot of observations, but say you only have two columns or three columns and you want to learn a ton more and you just can't do that much great analysis when you can only select three columns from your dataset. And again, it depends on your dataset. Or maybe in the first one, the upper left, maybe just have a small dataset. Your average number of columns and an average number of rows. And you know that's all you've got. Or the perfect case scenario is you have whatever the right amount of columns is for you and enough records to make judgments and inferences from your data and insights. And again, there's no magic number. I'm not going to say like a thousand columns wide and 2 million rows long or whatever the perfect ratio is between both of those. But just keep point in mind. This is especially true when you start to get into machine learning concepts, when you're trying to make
+Play video starting at :1:32 and follow transcript1:32
+different training and test datasets. You need to make sure that they're actually have enough observations to make a justifiable
+Play video starting at :1:39 and follow transcript1:39
+conclusion about your records. But same is true for data analysis. Speaking of data analysis, one of the amazing things you can do when you're exploring your data is look at, all right for this one given column, take first names.
+Play video starting at :1:55 and follow transcript1:55
+What's the frequency of occurrence? How many people are named James or something like that? In my population or in my organization? I'm just curious to know immediately, like, well, there is a lot of James's in the organization or the most common name for this U.S. charity that is present across multiple of these charities is blank.
+Play video starting at :2:17 and follow transcript2:17
+And the skew of the data. So the distribution, if it's not uniform, it could be really, really skewed in one direction. So if we say, for example, if we just looked at the nonprofit data that we pulled in and we saw extremely heavy skew towards charities in California, this is something that immediately could jump out at us that could say a couple of things. One, it could question the validity of the data. Did we collect everything or was there just California charities that were collected as well? So skew is something that you want to watch out for from an exploration standpoint. It also has performance implications. If your dataset is heavily skewed,
+Play video starting at :2:56 and follow transcript2:56
+it could affect the partitioning of your data, which we'll talk a little bit more about in the performance section and the third part of this course with advanced insights.
+
+# Clean ​and ​transform ​data ​using ​SQL
+Okay. So two methods for dealing with dirty data. First, clean it through SQL. Second, as I've alluded to quite a lot, there's a UI tool called Cloud Dataprep. That is going to be the basis of two labs for this module.
+Play video starting at ::16 and follow transcript0:16
+So you can clean it with SQL. So if your data needs to conform to business rules, you can do a lot of things directly within SQL and BigQuery. You can say this field is allowed to be null, meaning that it's allowed to have an empty value, or it's a required field. If you want them to put their first name and last name, you're have to put both those fields, and you can proactively check whether or not those values are null after the fact. And you can check things like IF then, or in SQL it could be a CASE WHEN, or it's IF null do this operation. There's a lot of conditional logic that you can apply to test for data validation. And you could also, in upstream systems, since BigQuery is an analytics warehouse, require those primary keys right, and require those constraints in those upstream systems before it even gets into BigQuery. So if you're the BigQuery data analysis, admin and guru of your data analysis group, you can put these constraints on these source systems, right? If someone's giving you bad transactional data, you know, don't clean up their mess. Tell them to take this class and to clean up their data and validate it before it even makes it into your systems.
+Play video starting at :1:30 and follow transcript1:30
+Okay. So confirming your it is accurate. So maybe it matches the data types, it follows everything about whether or not it's allowed to be null or required, but you need to make sure if it actually makes sense. So say the item price, for example, item price times quantity ordered should always equal the subtotal. You can set up a test or a check for that inside of SQL. Or potentially you can look up against an objective reference data set. So if you say, all right, well, you could have these 50 states in the United States, you could have a look up table that basically says, is this state that's in this column, within using that in operator there, this list that I have. So
+Play video starting at :2:14 and follow transcript2:14
+using a subquery or a join, which we're going to cover a lot more in the second part of this course is one of the ways you can actually nest that statement directly within the inoperator there. And we'll cover that. Okay. Completeness. Completeness is a hard one. So completeness is exploring the data to see if anything's not there. So checking for this skew, as we mentioned before. So looking for those null values and handling those null values. And if it's null, do this or if this value isn't present rollback on this value. If that values not present, rollback on this value, that's the COALESCE function there.
+Play video starting at :2:57 and follow transcript2:57
+All right. So you can enrich your data set with other data sets, mash them up together to form that complete picture. So say you have IRS tax filings for 2014 and 2015, and you wanted to bring both those together in one ultimate consolidated table. You can do that through UNION, or say you had 2014, 2015 data already in UNION together, and then you wanted to join in organizational details like the name of the charity or the address, You can enrich your data set by doing a JOIN. We'll cover more of that in the Cloud Dataprep Lab.
+Play video starting at :3:31 and follow transcript3:31
+Cleaning it. So it's got to be consistent. So as we mentioned, one fact in one place, and depending upon what kind of dirty data you're dealing with, there's a whole host of functions, as you've seen before. Parsing out dates, cleaning up a lot of date, is what data analysts spend a lot of the time doing, myself included. Substring parsing, doing that left, right, mid, that's all handled through the substring in standard SQL, and then replacing values as well. So again, here, the earlier you do this, before you start any of your really complex analysis, the cleaner you make your dataset,
+Play video starting at :4:7 and follow transcript4:07
+the better you're going to be. And it doesn't mean you have to replace your raw data table, right? So all these steps are going to be parts of a recipe that continue on after or at downstream. So this logic is repeatable when new dirty data comes into your system. Last but not least, Uniform. So you want to make sure that all your data types are similar and that you're comparing apples to apples, especially when it comes to visualizing your results. So this is where you're going to be in Data Studio, correctly labeling what are the units for your charts and graphs that you're creating as well? And throughout the rest of your code, particularly for that Mars rover burning up example, if you're using the English system or metric system, document that heavily using comments in your code.
+Play video starting at :4:54 and follow transcript4:54
+Okay. Here's an interesting example. So we've got some weather data that we're pulling from NOAA, and we're basically saying, give us all the weather data where the US state is not NULL, meaning that it is present, and limit the top ten results. So this is me just throwing in another kind of trick question at you guys. So the state has to be present. So the question is, why does the below query still show these blank state values when it's clearly filtered on IS NOT NULL?
+Play video starting at :5:26 and follow transcript5:26
+And the correct answer is, it's because it's not null. It's not null because it's blank. It's a valid blank value. You can't see it normally. If you could highlight over it, it would be like an empty string or someone hit the space bar once because a valid null value in BigQuery looks at exactly what that latitude and longitude looks like. It'll say N-U-L-L there.
+Play video starting at :5:53 and follow transcript5:53
+And if someone in their
+Play video starting at :5:58 and follow transcript5:58
+wrong mind wanted to actually store a string value as N-U-L-L, you have my permission to yell at them, because that would just drive a data analyst absolutely nuts.
+Play video starting at :6:8 and follow transcript6:08
+But you would still probably be able to determine whether or not it's a valid null, a string stored as N-U-L-L, or a blank with enough SQL analysis. But if you see that one, just let me know.
+
+# Clean ​and ​transform ​data ​using ​a ​new ​UI: ​Introducing ​Dataprep
+
+All right. Here's the really fun part. We get to introduce a new tool to a lot of you called Cloud Dataprep, where you can take a lot of the best practices you've learned for cleaning up your data and execute that using a fun user interface, a drag and drop interface.
+Play video starting at ::16 and follow transcript0:16
+Okay, we're going to explore with some tools.
+Play video starting at ::20 and follow transcript0:20
+So Cloud Dataprep, it's a pre-processing data pipeline building web UI tool that's part of Google Cloud platform. Behind the scenes, what it actually does, is it invokes and it kicks off a Cloud Dataflow. You remember that data engineering tool that we talked about? A Cloud Dataflow job without you having to write any of the Java code that normal data engineers would have to write. So it's a UI tool that allows you to access a lot of these functions, much like you would do deduplications inside of BigQuery and then behind the scenes it'll create that flow for you. And so that's the kind of key first word to know, is that these visual maps of, as you can see, data being ingested here, and then there's these scripts that are ran. You create these scripts which are called recipes
+Play video starting at :1:9 and follow transcript1:09
+inside of the UI. And all of this entire picture here is called a flow. So data flows together as you're transforming it.
+Play video starting at :1:19 and follow transcript1:19
+And how do you transform the data to these transformation steps? And the tool itself just uses the word wranglers. So the wranglers can include things that are very common that map to SQL, but you're not writing any SQL. Like aggregations or deduplications or remove these rows that satisfy this condition or create derived fields, much like as you would in SQL. And you can chain together multiple of these transformation steps into what's called a recipe. So three key terms, right? You have the flow itself, which is that very pretty visual flow. And then you have the wranglers, which are those transformation steps, and then you have the recipes which can be multiple wranglers that form a repeatable set of steps that preprocessor your data.
+Play video starting at :2:3 and follow transcript2:03
+Okay. So we covered recipes and at the end of the day, if you wanted to submit a recipe to actually run it, you then run that job. And the job then looks at the recipe and goes and fetches your entire dataset. Because when you're operating inside of Cloud Dataprep, it's only on a sample of your data set, about
+Play video starting at :2:24 and follow transcript2:24
+up to ten megabytes. And you're building the recipe there for the sake of speed, and the actual job runs against all of your data. And fires off that Cloud Dataflow job behind the scenes, which you can actually access and look at. And after that job is run, you can look at some pretty cool statistics. See how many rows of data were processed in this particular screenshot here. It's over 300,000 rows. And what we didn't show you yet was the really fun histograms that are available as part of the visuals that are kind of built into the tool where you can look for the frequency of values as well.
+Play video starting at :3:2 and follow transcript3:02
+And here's we can track those jobs. So just a quick tour of Cloud Dataprep. Here is one of the flows that you're actually going to be creating as part of the second lab. And let's just find a dataset that we can just show you how cool it is to explore this data. So here is your organizational details. Here is your 2014-2015 filing information. I'm going to click on one of these datasets and then a picture is worth a thousand words here. So as soon as this loads this ten megabyte sample of data into what's called the transformer in Cloud Dataprep.
+Play video starting at :3:40 and follow transcript3:40
+This is where you can spend just a ton of your time. And we'll cover more of this in the labs to come. But here you can see things like how many electronic filers are there? So it's like, imagine BigQuery where you have that preview, right, that we saw before of some of the rows and columns, complete with this histogram on top, which shows you how frequent are those values, right? So it's just like if you're going to run a little SQL query and do a group buy and it shows you that column for every single one of these fields as well. And although also at the top, it'll show you a data quality
+Play video starting at :4:15 and follow transcript4:15
+horizontal bar graph where it'll say, all right, well out of this dataset, you have 7 valid values and 24 missing values, or values that don't match with the data type that you said it should. So this exploring view inside of this transformer is very powerful for exploratory analysis and looking for those anomalies in your data, and you'll get a lot more into that in the second part of this lab. But first, you have to get your data into Cloud Dataprep.
+
+# Components of Data Fusion
+Managing your pipelines is easiest when you have the right tools. In this module, we'll take a high level look at the Cloud Data Fusion UI. Here are some of the key user interface elements that you will encounter when using Cloud Data Fusion.
+Play video starting at ::17 and follow transcript0:17
+Let's look at each of them In turn. Under Control Center, there is a section for Applications, artifacts, and a dataset. Here you could have multiple pipelines associated with a particular application. The control center gives you the ability to see everything at a glance and search for what you need, whether it's a particular dataset, pipeline, or other artifact like a data dictionary, for example. Under the pipeline section, you have a Developer studio, you can preview, export, schedule a job or project. You also have a connector and function palette and a navigation section as well.
+Play video starting at :1:2 and follow transcript1:02
+Under the Wrangler section, you have connections, transforms, data quality, insights, and functions. Under the integration metadata section, you can search, add tags and properties, and see the data lineage for field and data. The Hub allows you to see all the available plugins, sample use cases, and prebuilt pipelines. Entities include the ability to create pipelines, upload an application, a plugin, a driver, a library, and directives. There are two components in Administration - Management and Configuration. Under Management you have services and metrics. Under Configuration, you have Namespace, compute profiles, preferences, system artifacts, and the REST client. Next, we'll focus on the two pages where you will be spending most of your time: Building Pipelines and Wrangling data.
+
+# Building a Pipeline
+Now that we've looked at the components and the UI, we'll discuss the process of building a data pipeline. A pipeline is represented visually as a series of stages arranged in a graph. These graphs are called DAGs or Directed Acyclic Graphs because they flow from one direction to another and they cannot feed into themselves. Acyclic simply means not a circle.
+Play video starting at ::27 and follow transcript0:27
+Each stage is a node and as you can see here, it can be of a different type. You may start with a node that pulls data from Google Cloud Storage then passes it on to a node that parses a CSV. The next node takes multiple nodes as an input and joins them together before passing the joined data to two separate data sink nodes. As you saw in our previous example, you can have multiple nodes fork out from a single parent node.
+Play video starting at :1: and follow transcript1:00
+This is useful because you may want to kick off another data processing workstream that should not be blocked by any processing on a separate series of nodes.
+Play video starting at :1:12 and follow transcript1:12
+Naturally, you can combine data from two or more nodes into a single output in a sink as you saw before. In Data Fusion, the Studio is your user interface where you author and create these new pipelines.
+Play video starting at :1:29 and follow transcript1:29
+I'll highlight some of the major features that you will explore later in your lab. First, the area where you create these nodes and chain them together in your pipeline. That's your canvas. If you have many nodes in a pipeline, the canvas can get visually cluttered, so use the Mini Map to help navigate around a huge pipeline quickly.
+Play video starting at :1:52 and follow transcript1:52
+You can interact with the canvas and add objects by using the canvas control panel. And when you're ready to Save and Run the entire pipeline, you can do so with the pipeline actions toolbar at the top.
+Play video starting at :2:6 and follow transcript2:06
+Don't forget to give your pipeline a Name and Description, as well as make use of the many pre-existing templates and plugins so you don't have to write your pipeline from scratch.
+Play video starting at :2:19 and follow transcript2:19
+Here you see we've used the Template for "Data Pipeline - Batch" which gives us the three nodes you see here to move data from a GSC file, Process it in a Wrangler, and output it to BigQuery. You should make use of Preview Mode before you deploy and run your pipeline in production to ensure everything you run will run properly.
+Play video starting at :2:43 and follow transcript2:43
+While a pipeline is in preview, you can click on each node and see any sample data or errors that you will need to correct before deploying. After deployment, you can monitor the health of your pipelines and collect key summary stats of each execution.
+Play video starting at :3:3 and follow transcript3:03
+Here we are ingesting data from Twitter in Google Cloud platform and parsing each tweet before loading them into a variety of data sinks.
+Play video starting at :3:15 and follow transcript3:15
+If you have multiple pipelines, I recommend you make liberal use of the Tags feature to help you quickly find and organize each pipeline for your organization.
+Play video starting at :3:28 and follow transcript3:28
+As you see here, you can view the Start Time, the Duration of the Pipeline Run, and the overall Summary Across Runs for each pipeline.
+Play video starting at :3:39 and follow transcript3:39
+Again, you can quickly see the data throughput at each node in the pipeline simply by interacting with the node.
+Play video starting at :3:49 and follow transcript3:49
+One last thing you'll notice is the Compute Profile usd in the cloud.
+Play video starting at :3:54 and follow transcript3:54
+Currently at the time of recording, Cloud Data Fusion supports running on Cloud Dataproc but Cloud Dataflow support is on the roadmap.
+Play video starting at :4:4 and follow transcript4:04
+Remember, clicking on a node gives you detail on the inputs, outputs, and errors for that given node.
+Play video starting at :4:13 and follow transcript4:13
+Here we are integrating with the Cloud Speech to Text API to process audio files into searchable text.
+Play video starting at :4:22 and follow transcript4:22
+You can track the individual health of each node and get useful metrics like "Records out per second", "Average Processing time", and "Max Processing time" which can alert you
+Play video starting at :4:35 and follow transcript4:35
+of any anomalies in your pipeline. You can set your pipelines to run automatically at certain intervals.
+Play video starting at :4:43 and follow transcript4:43
+If your pipeline normally takes a long time to process the entire dataset you can also specify a maximum number of concurrent runs to help avoid processing data unnecessarily. Keep in mind that Cloud Data Fusion is designed for batch data pipelines. We will dive into streaming data pipelines and future modules. One of the biggest features of Cloud Data Fusion is the ability to track the lineage of a given field value.
+Play video starting at :5:14 and follow transcript5:14
+Let's take this example of a campaign field for a doubleclick dataset and track every transform operation that happened before and after this field.
+Play video starting at :5:25 and follow transcript5:25
+Here you can see the lineage of operations that are applied to the campaign field between the "campaign" dataset and the "doubleclick" dataset. Note the time this field was last changed by a pipeline run and each of the input fields and descriptions that interacted with the field as part of processing it between datasets.
+Play video starting at :5:49 and follow transcript5:49
+Imagine the use cases if you have inherited a set of analytical reports saying you want to walk back upstream all of the logic that went into a certain field. Well, now you can.
+
+# Exploring Data using Wrangler
+We've discussed the core components, tools and processes of building data pipelines. Now we'll look at using Wrangler to explore the dataset. So far in the course we have focused on building new pipelines for our datasets.
+Play video starting at ::16 and follow transcript0:16
+That presumes we know what the data is and what transformations need to be made already.
+Play video starting at ::23 and follow transcript0:23
+Oftentimes a new dataset still needs to be explored and analyzed for insights. The Wrangler UI is the Cloud Data Fusion environment for exploring new datasets visually for insights.
+Play video starting at ::37 and follow transcript0:37
+Here you can inspect a dataset and build a series of transformation steps, called Directives, to stitch together a pipeline. Here's what the Wrangler UI looks like. Starting from the left you have your Connections to existing datasets.
+Play video starting at ::54 and follow transcript0:54
+Here. You can add new connections to a variety of data sources like Google Cloud Storage, Google BigQuery, or even other cloud providers.
+Play video starting at :1:6 and follow transcript1:06
+Once you specify your connection, you can browse all of the files or tables in that source.
+Play video starting at :1:13 and follow transcript1:13
+Here you see a GSC bucket of demo-datasets and all the CSV files of customer complaints. Once you've found an example dataset, like, Customers.csv here, you can explore the rows and columns visually and view sample insights.
+Play video starting at :1:31 and follow transcript1:31
+As you explore the data you may want to create new calculated fields, drop columns, filter rows, or otherwise wrangle the data.
+Play video starting at :1:42 and follow transcript1:42
+You can do so using the Wrangler UI by adding new Directives to form a data transformation recipe.
+Play video starting at :1:51 and follow transcript1:51
+When you're happy with your transformations, you can Create a Pipeline that you can then run at regular intervals.
